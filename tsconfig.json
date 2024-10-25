@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "backend/src/server.js", "backend/src/router.js", "backend/src/app.js", "backend/src/models/user.js", "backend/src/models/connection.js", "backend/src/controllers/userController.js", "backend/lib/prisma.js"],
   "exclude": ["node_modules"]
 }
