@@ -10,14 +10,19 @@
   },
   "dependencies": {
     "@prisma/client": "^5.21.1",
+    "axios": "^1.7.7",
+    "jquery": "^3.7.1",
     "next": "15.0.0",
     "react": "19.0.0-rc-65a56d0e-20241020",
-    "react-dom": "19.0.0-rc-65a56d0e-20241020"
+    "react-dom": "19.0.0-rc-65a56d0e-20241020",
+    "toastr": "^2.1.4"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.32",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/toastr": "^2.1.43",
     "eslint": "^8",
     "eslint-config-next": "15.0.0",
     "postcss": "^8",
