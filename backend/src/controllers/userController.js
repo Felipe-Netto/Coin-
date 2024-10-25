@@ -1,10 +1,12 @@
 const { log } = require('console');
 const usersModel = require('../models/user');
 
-const getAll = async (request, response) => {
-    const users = await usersModel.getAll();
+const findUser = async (request, response) => {
+    const { email } = request.body;
 
-    return response.status(200).json(users);
+    const user = await usersModel.findUser(email);
+
+    return response.status(200).json(user);
 }
 
 const createUser = async (request, response) => {
@@ -17,6 +19,6 @@ const createUser = async (request, response) => {
 }
 
 module.exports = {
-    getAll,
-    createUser
+    createUser,
+    findUser
 }
