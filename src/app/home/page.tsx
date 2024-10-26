@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import Menu from './menu'; // Importe o componente Menu
+import Menu from '../../components/menu';
 
 const Home = () => {
   const router = useRouter();
 
   const irProLogin = () => {
-    router.push('/login');
+    router.push('/');
   };
 
   return (

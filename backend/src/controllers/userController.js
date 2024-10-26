@@ -1,12 +1,28 @@
-const { log } = require('console');
 const usersModel = require('../models/user');
+const { v4: uuid } = require('uuid');
 
 const findUser = async (request, response) => {
-    const { email } = request.body;
+    try {
+        const { email, password } = request.body;
 
-    const user = await usersModel.findUser(email);
+        const user = await usersModel.findUser(email, password);
 
-    return response.status(200).json(user);
+        if (!user) {
+            return response.status(404).json({ message: 'User not found' });
+        }
+
+        const token = uuid();
+
+        user.update({
+            data: {
+                token: token
+            }
+        });
+
+        return response.status(200).json({token, user});
+    } catch (error) {
+        return response.status(500).json({ error: error.message });
+    }
 }
 
 const createUser = async (request, response) => {
