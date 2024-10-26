@@ -1,5 +1,15 @@
 const usersModel = require('../models/user');
 const { v4: uuid } = require('uuid');
+const prisma = require('../../lib/prisma.js');
+
+const createUser = async (request, response) => {
+    console.log(request.body);
+    const { name, email, password } = request.body;
+
+    const user = await usersModel.createUser(name, email, password);
+
+    return response.status(201).json(user);
+}
 
 const findUser = async (request, response) => {
     try {
@@ -13,7 +23,10 @@ const findUser = async (request, response) => {
 
         const token = uuid();
 
-        user.update({
+        await prisma.User.update({
+            where: {
+                id_user: user.id_user
+            },
             data: {
                 token: token
             }
@@ -25,16 +38,26 @@ const findUser = async (request, response) => {
     }
 }
 
-const createUser = async (request, response) => {
-    console.log(request.body);
-    const { name, email, password } = request.body;
+const findUserByToken = async (request, response) => {
+    try {
+        const token = request.body;
+        console.log(token);
 
-    const user = await usersModel.createUser(name, email, password);
+        return;
+        const user = await usersModel.findUserByToken(token);
 
-    return response.status(201).json(user);
+        if (!user) {
+            return response.status(404).json({ message: 'User not found' });
+        }
+
+        return response.status(200).json(user);
+    } catch (error) {
+        return response.status(500).json({ error: error.message });
+    }
 }
 
 module.exports = {
     createUser,
-    findUser
+    findUser,
+    findUserByToken
 }

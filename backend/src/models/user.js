@@ -20,12 +20,21 @@ const findUser = async (email, password) => {
         }
     });
 
-    console.log(user);
+    return user;
+}
+
+const findUserByToken = async (token) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            token: token
+        }
+    });
 
     return user;
 }
 
 module.exports = {
     createUser,
-    findUser
+    findUser,
+    findUserByToken
 };

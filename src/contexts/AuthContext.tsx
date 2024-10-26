@@ -39,10 +39,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const { 'coinplus.token': token } = parseCookies();
 
         if(token){
-            // ROTA PARA BUSCAR O TOKEN DO USUÁRIO LOGADO 
-            // FAZER REQUISIÇÃO PARA API PARA BUSCAR O USUÁRIO LOGADO
-            // VÍDEO: AUTENTICAÇÃO JWT COM BACKEND PRÓPRIO - ROCKETSEAT 
-            // MIN 44  
+            axios.post("http://localhost:3333/user/token", {
+                token,
+            }).then(response => {
+                const { user } = response.data;
+                setUser(user);
+            }).catch(() => {
+                console.log("Erro ao validar token, redirecionando para a página de login");
+                router.push("/");
+            });
+        }else {
+            router.push("/");
         }
     }, []);
 
