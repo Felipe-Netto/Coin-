@@ -1,5 +1,5 @@
 import React from 'react';
-import moeda from '../../assets/moeda.png';
+import moeda from '../assets/moeda.png';
 import { StaticImageData } from 'next/image';
 
 const Menu = () => {

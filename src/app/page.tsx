@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import Home from "../components/home";
 
 export default function Page() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function Page() {
 
   return (
     <div>
+      <Home />;
       <h1>Home</h1>
       <button
         onClick={irProLogin}
