@@ -13,7 +13,7 @@ const Menu = () => {
           />
           <h1 className="text-white text-2xl font-bold">Coin+</h1>
         </div>
-        <ul className="flex space-x-4 justify-center w-full"> {/* Adicione justify-center e w-full */}
+        <ul className="flex space-x-4 justify-center w-full">
           <li>
             <a href="#" className="text-white hover:text-indigo-200">
               Visão Geral
