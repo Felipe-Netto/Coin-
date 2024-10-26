@@ -22,28 +22,28 @@ const Menu = () => {
           <li>
             <a
               href="#"
-              className="text-white hover:text-indigo-200 border-b-2 border-transparent hover:border-indigo-200 transition-colors">
+              className="text-white hover:text-indigo-200 border-b-2 border-transparent hover:border-indigo-200 transition-colors pb-4">
               Visão Geral
             </a>
           </li>
           <li>
             <a
               href="#"
-              className="text-white hover:text-indigo-200 border-b-2 border-transparent hover:border-indigo-200 transition-colors">
+              className="text-white hover:text-indigo-200 border-b-2 border-transparent hover:border-indigo-200 transition-colors pb-4">
               Lançamentos
             </a>
           </li>
           <li>
             <a
               href="#"
-              className="text-white hover:text-indigo-200 border-b-2 border-transparent hover:border-indigo-200 transition-colors">
+              className="text-white hover:text-indigo-200 border-b-2 border-transparent hover:border-indigo-200 transition-colors pb-4">
               Relatórios
             </a>
           </li>
           <li>
             <a
               href="#"
-              className="text-white hover:text-indigo-200 border-b-2 border-transparent hover:border-indigo-200 transition-colors">
+              className="text-white hover:text-indigo-200 border-b-2 border-transparent hover:border-indigo-200 transition-colors pb-4">
               Metas
             </a>
           </li>

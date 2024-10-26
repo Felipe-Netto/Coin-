@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Menu from './menu';
+import InfoContainer from './infocontainer';
 
 const Home = () => {
   const router = useRouter();
@@ -13,8 +14,9 @@ const Home = () => {
 
   return (
     <div>
-      <Menu /> 
-      <div className="flex bg-gray-200 flex-col items-center justify-center h-screen">
+      <Menu />
+      <div className="flex flex-col items-center h-screen bg-gray-300">
+        <InfoContainer />
       </div>
     </div>
   );
