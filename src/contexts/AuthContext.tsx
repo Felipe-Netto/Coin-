@@ -44,8 +44,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
             }).then(response => {
                 const { user } = response.data;
                 setUser(user);
+                console.log(user);
+                router.push("/home");
             }).catch(() => {
-                console.log("Erro ao validar token, redirecionando para a página de login");
                 router.push("/");
             });
         }else {

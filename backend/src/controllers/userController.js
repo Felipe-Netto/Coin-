@@ -41,9 +41,8 @@ const findUser = async (request, response) => {
 const findUserByToken = async (request, response) => {
     try {
         const token = request.body;
-        console.log(token);
+        console.log(request);
 
-        return;
         const user = await usersModel.findUserByToken(token);
 
         if (!user) {

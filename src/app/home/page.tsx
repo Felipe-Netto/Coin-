@@ -3,12 +3,16 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Menu from '../../components/menu';
+import { AuthContext } from '../../contexts/AuthContext';
+import { useContext } from 'react';
 
 const Home = () => {
+  const { user } = useContext(AuthContext);
   const router = useRouter();
 
   const irProLogin = () => {
-    router.push('/');
+    // router.push('/');
+    console.log(user);
   };
 
   return (

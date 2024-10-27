@@ -31,7 +31,7 @@ const findUserByToken = async (token) => {
     });
 
     return user;
-}
+};
 
 module.exports = {
     createUser,
