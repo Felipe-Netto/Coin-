@@ -25,6 +25,7 @@ type User = {
     id: number;
     name: string;
     email: string;
+    saldo: number;
 }
 
 export const AuthContext = createContext({} as AuthContextType);
@@ -42,12 +43,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
             axios.post("http://localhost:3333/user/token", {
                 token,
             }).then(response => {
-                const { user } = response.data;
-                setUser(user);
+                const user = response.data;
                 console.log(user);
+                setUser(user);
                 router.push("/home");
-            }).catch(() => {
-                router.push("/");
+            }).catch((error) => {
+                console.log('ERROR:', error);
             });
         }else {
             router.push("/");

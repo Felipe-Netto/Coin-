@@ -24,9 +24,10 @@ const findUser = async (email, password) => {
 }
 
 const findUserByToken = async (token) => {
+    console.log('Buscando token: ', token);
     const user = await prisma.user.findUnique({
         where: {
-            token: token
+            token: token.token
         }
     });
 
