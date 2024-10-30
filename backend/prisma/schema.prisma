@@ -18,7 +18,7 @@ model User {
   email String  @unique
   senha String
   nome  String
-  nascimento DateTime @db.Date
+  nascimento DateTime? @db.Date
   telefone String
   token String? @unique
   saldo Decimal?
