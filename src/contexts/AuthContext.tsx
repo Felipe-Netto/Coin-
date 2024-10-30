@@ -18,12 +18,12 @@ type AuthContextType = {
 
 type SignInData = {
     email: string;
-    password: string;
+    senha: string;
 }
 
 type User = {
     id: number;
-    name: string;
+    nome: string;
     email: string;
     saldo: number;
 }
@@ -55,11 +55,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, []);
 
-    async function signIn({ email, password }: SignInData) {
+    async function signIn({ email, senha }: SignInData) {
         try {
             const response = await axios.post("http://localhost:3333/user", {
             email,
-            password,
+            senha,
             });
 
             const { token, user } = response.data;

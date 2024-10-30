@@ -1,22 +1,25 @@
 const prisma = require('../../lib/prisma.js');
 
-const createUser = async (name, email, password) => {
+const createUser = async (nome, email, nascimento, telefone, senha) => {
+    console.log('Criando usuário: ', nome, email, nascimento, telefone, senha);
     const user = await prisma.user.create({
         data: {
-            name,
+            nome,
             email,
-            password
+            nascimento,
+            telefone,
+            senha
         }
     });
 
     return user;
 }
 
-const findUser = async (email, password) => {
+const findUser = async (email, senha) => {
     const user = await prisma.user.findUnique({
         where: {
             email: email,
-            password: password
+            senha: senha
         }
     });
 

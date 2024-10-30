@@ -3,19 +3,26 @@ const { v4: uuid } = require('uuid');
 const prisma = require('../../lib/prisma.js');
 
 const createUser = async (request, response) => {
+    console.log('Criando usuário: ', request.body);
     console.log(request.body);
-    const { name, email, password } = request.body;
+    const { nome, email, nascimento, telefone, senha } = request.body;
 
-    const user = await usersModel.createUser(name, email, password);
+    const userExists = await usersModel.findUser(email);
+
+    if (userExists) {
+        return response.status(409).json({ message: 'Usuário ja existente' });
+    }
+
+    const user = await usersModel.createUser(nome, email, nascimento, telefone, senha);
 
     return response.status(201).json(user);
 }
 
 const findUser = async (request, response) => {
     try {
-        const { email, password } = request.body;
+        const { email, senha } = request.body;
 
-        const user = await usersModel.findUser(email, password);
+        const user = await usersModel.findUser(email, senha);
 
         if (!user) {
             return response.status(404).json({ message: 'User not found' });
