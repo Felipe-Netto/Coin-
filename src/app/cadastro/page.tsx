@@ -5,8 +5,10 @@ import moeda from '../../assets/moeda.png';
 import { StaticImageData } from 'next/image';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import toastr from 'toastr';
 
-const CriarUsuario: React.FC = () => {
+export default function Cadastro() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         nome: '',
         email: '',
@@ -46,19 +48,41 @@ const CriarUsuario: React.FC = () => {
             return;
         }
 
+        const user = {
+            nome: formData.nome,
+            email: formData.email,
+            nascimento: new Date(formData.dataNascimento),
+            telefone: formData.telefone,
+            senha: formData.senha,
+        }
+
+        try {
+            axios.post('http://localhost:3333/criar-usuario', user)
+                .then((response) => {
+                    console.log('Usuário criado com sucesso:', response.data);
+                    router.push('/');
+                    toastr.success('Usuário criado com sucesso!');
+                }).catch((error) => {
+                    toastr.error(error.response.data.message);
+                });
+        } catch (error) {
+            console.error('Mensagem de erro: ', error);
+        }
+        
+
+
         console.log("Dados do usuário:", formData);
-        alert("Usuário criado com sucesso!");
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-[#0B2545]">
-            <form onSubmit={handleSubmit} className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-                <div className="text-center mb-6">
+        <div className="flex items-center min-h-screen justify-center bg-[#0B2545]">
+            <form onSubmit={handleSubmit} className="w-full max-w-md max-h-screen px-10 py-5 bg-white rounded-lg shadow-md">
+                <div className="text-center mb-3">
                     <img src={(moeda as StaticImageData).src} alt="Coin Icon" className="w-12 h-12 mx-auto"/>
                     <h2 className="text-2xl font-bold text-[#0B2545]">Coin+</h2>
                 </div>
                 
-                <div className="mb-4">
+                <div className="mb-2">
                     <label className="block text-gray-600 mb-1">Nome</label>
                     <input
                         type="text"
@@ -66,11 +90,11 @@ const CriarUsuario: React.FC = () => {
                         value={formData.nome}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-2">
                     <label className="block text-gray-600 mb-1">Email</label>
                     <input
                         type="email"
@@ -78,12 +102,12 @@ const CriarUsuario: React.FC = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-2">
                     <label className="block text-gray-600 mb-1">Data de Nascimento</label>
                     <input
                         type="date"
@@ -91,11 +115,11 @@ const CriarUsuario: React.FC = () => {
                         value={formData.dataNascimento}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-2">
                     <label className="block text-gray-600 mb-1">Telefone</label>
                     <input
                         type="tel"
@@ -103,11 +127,11 @@ const CriarUsuario: React.FC = () => {
                         value={formData.telefone}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-2">
                     <label className="block text-gray-600 mb-1">Senha</label>
                     <input
                         type="password"
@@ -115,11 +139,11 @@ const CriarUsuario: React.FC = () => {
                         value={formData.senha}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-2">
                     <label className="block text-gray-600 mb-1">Confirmar Senha</label>
                     <input
                         type="password"
@@ -127,14 +151,14 @@ const CriarUsuario: React.FC = () => {
                         value={formData.confirmarSenha}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     {errors.confirmarSenha && <p className="text-red-500 text-sm mt-1">{errors.confirmarSenha}</p>}
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full py-2 mt-4 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                    className="w-full py-2 mt-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
                 >
                     Criar Conta
                 </button>
@@ -142,5 +166,3 @@ const CriarUsuario: React.FC = () => {
         </div>
     );
 };
-
-export default CriarUsuario;

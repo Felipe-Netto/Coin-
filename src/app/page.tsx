@@ -3,7 +3,6 @@
 import React from 'react';
 import moeda from '../assets/moeda.png';
 import { StaticImageData } from 'next/image';
-import axios from 'axios';
 import 'toastr/build/toastr.min.css';
 import toastr from 'toastr'; 
 import { useRouter } from 'next/navigation';
@@ -98,9 +97,9 @@ export default function Page() {
 
           <p className="mt-10 text-center text-sm text-slate-300">
             Não possui conta?{' '}
-            <a href="#" className="font-semibold leading-6 text-indigo-500 hover:text-indigo-400">
+            <span onClick={() => {router.push('/cadastro')}} className="font-semibold leading-6 text-indigo-500 hover:text-indigo-400 cursor-pointer">
               Criar
-            </a>
+            </span>
           </p>
         </div>
       </div>

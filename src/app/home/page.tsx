@@ -19,7 +19,7 @@ const Home = () => {
     <div>
       <Menu /> 
       <div className="flex flex-col items-center justify-center h-screen bg-sky-950">
-        <h1 className="text-4xl font-bold text-white">Bem-vindo ao Coin+, {user?.name}</h1>
+        <h1 className="text-4xl font-bold text-white">Bem-vindo ao Coin+, {user?.nome}</h1>
         <button
           onClick={irProLogin}
           className="mt-4 rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500"
