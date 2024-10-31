@@ -23,7 +23,7 @@ const Home = () => {
       <Menu />
       <div className="flex flex-col items-center p-8">
         <div className="bg-white shadow-lg rounded-lg p-6 mb-8 w-full max-w-[900px]">
-          <h1 className="text-3xl font-bold text-indigo-600">Bem-vindo, {user?.nome}!</h1>
+          <h1 className="text-3xl font-bold text-blue-900">Bem-vindo, {user?.nome}!</h1>
           <h2 className="text-xl mt-4">Seu saldo:</h2>
           <div className="text-2xl font-semibold text-gray-700 mt-2">
             R$ 1.500,00 
@@ -31,7 +31,7 @@ const Home = () => {
         </div>
 
         <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-[900px]">
-          <h2 className="text-2xl font-bold text-indigo-600 mb-4">Gastos por Categoria</h2>
+          <h2 className="text-2xl font-bold text-blue-900 mb-4">Gastos por Categoria</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {Object.entries(gastos).map(([categoria, valor]) => (
               <div key={categoria} className="bg-gray-200 rounded-lg p-4 shadow-md">

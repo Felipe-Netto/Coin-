@@ -4,7 +4,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "senha" TEXT NOT NULL,
     "nome" TEXT NOT NULL,
-    "nascimento" DATE NOT NULL,
+    "nascimento" DATE,
     "telefone" TEXT NOT NULL,
     "token" TEXT,
     "saldo" DECIMAL(65,30),

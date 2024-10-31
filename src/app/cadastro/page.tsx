@@ -75,15 +75,15 @@ export default function Cadastro() {
     };
 
     return (
-        <div className="flex items-center min-h-screen justify-center bg-[#0B2545]">
-            <form onSubmit={handleSubmit} className="w-full max-w-md max-h-screen px-10 py-5 bg-white rounded-lg shadow-md">
+        <div className="flex items-center min-h-screen justify-center bg-gray-900">
+            <form onSubmit={handleSubmit} className="w-full max-w-md max-h-screen px-10 py-5 bg-gray-800 rounded-lg shadow-md">
                 <div className="text-center mb-3">
                     <img src={(moeda as StaticImageData).src} alt="Coin Icon" className="w-12 h-12 mx-auto"/>
-                    <h2 className="text-2xl font-bold text-[#0B2545]">Coin+</h2>
+                    <h2 className="text-2xl font-bold text-white">Coin+</h2>
                 </div>
                 
                 <div className="mb-2">
-                    <label className="block text-gray-600 mb-1">Nome</label>
+                    <label className="block text-white mb-1">Nome</label>
                     <input
                         type="text"
                         name="nome"
@@ -95,7 +95,7 @@ export default function Cadastro() {
                 </div>
 
                 <div className="mb-2">
-                    <label className="block text-gray-600 mb-1">Email</label>
+                    <label className="block text-white mb-1">Email</label>
                     <input
                         type="email"
                         name="email"
@@ -108,7 +108,7 @@ export default function Cadastro() {
                 </div>
 
                 <div className="mb-2">
-                    <label className="block text-gray-600 mb-1">Data de Nascimento</label>
+                    <label className="block text-white mb-1">Data de Nascimento</label>
                     <input
                         type="date"
                         name="dataNascimento"
@@ -120,7 +120,7 @@ export default function Cadastro() {
                 </div>
 
                 <div className="mb-2">
-                    <label className="block text-gray-600 mb-1">Telefone</label>
+                    <label className="block text-white mb-1">Telefone</label>
                     <input
                         type="tel"
                         name="telefone"
@@ -132,7 +132,7 @@ export default function Cadastro() {
                 </div>
 
                 <div className="mb-2">
-                    <label className="block text-gray-600 mb-1">Senha</label>
+                    <label className="block text-white mb-1">Senha</label>
                     <input
                         type="password"
                         name="senha"
@@ -144,7 +144,7 @@ export default function Cadastro() {
                 </div>
 
                 <div className="mb-2">
-                    <label className="block text-gray-600 mb-1">Confirmar Senha</label>
+                    <label className="block text-white mb-1">Confirmar Senha</label>
                     <input
                         type="password"
                         name="confirmarSenha"
@@ -158,7 +158,7 @@ export default function Cadastro() {
 
                 <button
                     type="submit"
-                    className="w-full py-2 mt-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                    className="w-full py-2 mt-2 text-white bg-blue-900 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
                 >
                     Criar Conta
                 </button>
