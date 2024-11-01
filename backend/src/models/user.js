@@ -26,6 +26,40 @@ const findUser = async (email, senha) => {
     return user;
 }
 
+const addBalance = async (id, valor) => {
+    const user = await prisma.user.update({
+        where: {
+            id_user: id
+        },
+        data: {
+            saldo: {
+                increment: valor 
+            }
+        }
+    });
+
+    console.log('Adicionando saldo: ', user);
+
+    return user;
+}
+
+const subtractBalance = async (id, valor) => {
+    const user = await prisma.user.update({
+        where: {
+            id_user: id
+        },
+        data: {
+            saldo: {
+                decrement: valor 
+            }
+        }
+    });
+
+    console.log('Subtraindo saldo: ', user);
+
+    return user;
+}
+
 const findUserByToken = async (token) => {
     console.log('Buscando token: ', token);
     const user = await prisma.user.findUnique({
@@ -40,5 +74,7 @@ const findUserByToken = async (token) => {
 module.exports = {
     createUser,
     findUser,
+    addBalance,
+    subtractBalance,
     findUserByToken
 };
