@@ -1,7 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './FinancialControl.module.css';
+import axios from 'axios';
+
+interface Option {
+  id_categoria: number;
+  nome: string;
+}
 
 const FinancialControl: React.FC = () => {
   const [amount, setAmount] = useState<number | ''>('');
@@ -14,6 +20,26 @@ const FinancialControl: React.FC = () => {
     type: 'add' | 'remove';
   }[]>([]);
   const [transactionType, setTransactionType] = useState<'add' | 'remove'>('add'); // Estado para definir se é adicionar ou remover
+  const [options, setOptions] = useState<Option[]>([]); // Estado para armazenar as opções
+  const [selectedOption, setSelectedOption] = useState(''); // Estado para a opção selecionada
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const response = await axios.get('http://localhost:3333/listar-categorias'); // Requisição à API
+        setOptions(response.data); // Armazena as opções no estado
+      } catch (error) {
+        console.error('Erro ao buscar opções:', error);
+      }
+    };
+
+    fetchOptions();
+  }, []);
+
+  const handleSelectChange = (event: any) => {
+    setSelectedOption(event.target.value); // Atualiza o estado com o valor selecionado
+  };
+
 
   const handleAddTransaction = () => {
     if (amount !== '' && date) { // Verifica se a quantidade e a data estão preenchidas
@@ -31,27 +57,38 @@ const FinancialControl: React.FC = () => {
     return new Date(b.date).getTime() - new Date(a.date).getTime(); // Compara as datas
   });
 
+  const verificaTipoDeTransacao = () => {
+    if(transactionType === 'add') {
+      document.getElementById('div_select_categoria')?.classList.remove('hidden');
+    }else{
+      console.log('Adicionar Saldo');
+      document.getElementById('div_select_categoria')?.classList.add('hidden');
+    }
+  }
+
   return (
     <div className={styles.container}>
       <h2 className="text-2xl font-bold text-blue-900 mb-2">Adicionar Lançamento</h2>
 
       {/* Seleção de Tipo de Transação */}
       <div className={styles.transactionType}>
-        <label className={styles.radioLabel}>
+        <label className="me-5">
           <input
             type="radio"
             value="add"
+            className='me-1'
             checked={transactionType === 'add'}
-            onChange={() => setTransactionType('add')}
+            onChange={() => {setTransactionType('add'), verificaTipoDeTransacao()}}
           />
           Adicionar Saldo
         </label>
-        <label className={styles.radioLabel}>
+        <label>
           <input
             type="radio"
             value="remove"
+            className='me-1'
             checked={transactionType === 'remove'}
-            onChange={() => setTransactionType('remove')}
+            onChange={() => {setTransactionType('remove'), verificaTipoDeTransacao()}}
           />
           Remover Saldo
         </label>
@@ -71,6 +108,24 @@ const FinancialControl: React.FC = () => {
         onChange={(e) => setDescription(e.target.value)}
         className={`${styles.input} ${styles.inputText}`} // Classe para estilo consistente
       />
+
+      <div id='div_select_categoria' className='hidden'>
+        <label htmlFor="dynamicSelect" className="block font-medium">Selecione uma categoria:</label>
+        <select
+          id="dynamicSelect"
+          value={selectedOption}
+          onChange={handleSelectChange}
+          className={`${styles.input} ${styles.inputText}`}
+        >
+          <option value="">Selecione...</option>
+          {options.map((option) => (
+            <option key={option.id_categoria} value={option.id_categoria}>
+              {option.nome}
+            </option>
+          ))}
+        </select>
+      </div>
+  
       <input
         type="date" // Campo de entrada para a data
         value={date}

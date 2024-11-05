@@ -19,8 +19,6 @@ const listCategories = async (request, response) => {
     try {
         const categories = await categoriaModel.listCategories();
         
-        console.log('Categorias listadas: ', categories);
-
         return response.status(200).json(categories);
     } catch (error) {
         console.log('Erro ao listar categorias: ', error);
