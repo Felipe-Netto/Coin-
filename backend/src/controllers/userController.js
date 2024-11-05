@@ -3,8 +3,6 @@ const { v4: uuid } = require('uuid');
 const prisma = require('../../lib/prisma.js');
 
 const createUser = async (request, response) => {
-    console.log('Criando usuário: ', request.body);
-    console.log(request.body);
     const { nome, email, nascimento, telefone, senha } = request.body;
 
     const userExists = await usersModel.findUser(email);
@@ -45,42 +43,9 @@ const findUser = async (request, response) => {
     }
 }
 
-const addBalance = async (request, response) => {
-    try {
-        const { id_user, valor } = request.body;
-
-        const user = await usersModel.addBalance(id_user, valor);
-
-        if (!user) {
-            return response.status(404).json({ message: 'User not found' });
-        }
-
-        return response.status(200).json(user);
-    } catch (error) {
-        return response.status(500).json({ error: error.message });
-    }
-}
-
-const subtractBalance = async (request, response) => {
-    try {
-        const { id_user, valor } = request.body;
-
-        const user = await usersModel.subtractBalance(id_user, valor);
-
-        if (!user) {
-            return response.status(404).json({ message: 'User not found' });
-        }
-
-        return response.status(200).json(user);
-    } catch (error) {
-        return response.status(500).json({ error: error.message });
-    }
-}
-
 const findUserByToken = async (request, response) => {
     try {
         const token = request.body;
-        console.log(request);
 
         const user = await usersModel.findUserByToken(token);
 
@@ -97,7 +62,5 @@ const findUserByToken = async (request, response) => {
 module.exports = {
     createUser,
     findUser,
-    addBalance,
-    subtractBalance,
     findUserByToken
 }
