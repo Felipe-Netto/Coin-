@@ -21,8 +21,28 @@ model User {
   nascimento DateTime? @db.Date
   telefone String
   token String? @unique
-  saldo Decimal?
+  saldo Decimal @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  lancamentos Lancamentos[]
+}
+
+model Categorias {
+  id_categoria Int @id @default(autoincrement())
+  nome String @unique
+  descricao String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  lancamentos Lancamentos[]
+}
+
+model Lancamentos {
+  id_lancamento Int @id @default(autoincrement())
+  user User @relation(fields: [id_user], references: [id_user])
+  id_user Int
+  categoria Categorias? @relation(fields: [id_categoria], references: [id_categoria])
+  id_categoria Int?
+  saida Boolean
+  valor Decimal
 }
  
