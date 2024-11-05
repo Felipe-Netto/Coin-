@@ -46,10 +46,6 @@
   margin-bottom: 1rem; /* Espaço entre a seleção de tipo e os inputs */
 }
 
-.radioLabel {
-  margin-right: 2rem; /* Espaçamento lateral entre os rótulos */
-}
-
 .container {
   padding: 20px;
   background-color: #f9f9f9; /* Cor de fundo suave */
