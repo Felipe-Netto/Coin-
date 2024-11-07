@@ -26,6 +26,10 @@ const Home = () => {
   const handleAddSaldo = (novoSaldo: number) => {
     setSaldo(novoSaldo);
   };
+
+  const handleRemoveSaldo = (novoSaldo: number) => {
+    setSaldo(novoSaldo);
+  };
   
   useEffect(() => {
     const fetchCategories = async () => {
@@ -48,7 +52,11 @@ const Home = () => {
         onClose={() => setIsModalAdicionarSaldoOpen(false)}
         onAddSaldo={handleAddSaldo}
       />
-      <RemoverSaldo open={isModalRemoverSaldoOpen} onClose={() => setIsModalRemoverSaldoOpen(false)} />
+      <RemoverSaldo 
+        open={isModalRemoverSaldoOpen} 
+        onClose={() => setIsModalRemoverSaldoOpen(false)} 
+        onRemoveSaldo={handleRemoveSaldo}
+      />
 
       <div className="flex flex-col items-center p-8">
         <div className="bg-white shadow-lg rounded-lg p-6 mb-8 w-full max-w-[900px]">
