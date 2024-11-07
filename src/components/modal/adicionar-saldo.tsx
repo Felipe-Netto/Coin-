@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useContext } from 'react';
-import { id } from 'date-fns/locale';
 
 interface abrirProps {
   open: boolean;
