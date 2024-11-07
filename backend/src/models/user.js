@@ -35,8 +35,19 @@ const findUserByToken = async (token) => {
     return user;
 };
 
+const findUserById = async (id_user) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id_user: id_user
+        }
+    });
+
+    return user;
+};
+
 module.exports = {
     createUser,
     findUser,
-    findUserByToken
+    findUserByToken,
+    findUserById
 };

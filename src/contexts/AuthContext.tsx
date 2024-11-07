@@ -22,7 +22,7 @@ type SignInData = {
 }
 
 type User = {
-    id: number;
+    id_user: number;
     nome: string;
     email: string;
     saldo: number;
