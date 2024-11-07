@@ -44,5 +44,6 @@ model Lancamentos {
   id_categoria Int?
   saida Boolean
   valor Decimal
+  descricao String?
 }
  

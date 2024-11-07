@@ -59,8 +59,25 @@ const findUserByToken = async (request, response) => {
     }
 }
 
+const findUserById = async (request, response) => {
+    try {
+        const { id_user } = request.body;
+
+        const user = await usersModel.findUserById(id_user);
+
+        if (!user) {
+            return response.status(404).json({ message: 'User not found' });
+        }
+
+        return response.status(200).json(user);
+    } catch (error) {
+        return response.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     createUser,
     findUser,
-    findUserByToken
+    findUserByToken,
+    findUserById
 }
