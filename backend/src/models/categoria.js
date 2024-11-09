@@ -11,15 +11,17 @@ const addCategory = async (nome, descricao) => {
     return category;
 }
 
-const listCategories = async () => {
+const listCategories = async (id_user) => {
     const categories = await prisma.categorias.findMany({
         include: {
             lancamentos: {
                 select: {
                     valor: true,
+                    id_user: true
                 },
                 where: {
                     saida: true,
+                    id_user: parseInt(id_user, 10)
                 }
             }
         }
@@ -35,8 +37,9 @@ const listCategories = async () => {
         };
     });
     
+    const topCategories = categoriesWithTotals.sort((a, b) => b.totalGastos - a.totalGastos);
 
-    return categoriesWithTotals;
+    return topCategories;
 }
 
 const listTopCategories = async (limit = 4, id_user) => {
@@ -70,8 +73,19 @@ const listTopCategories = async (limit = 4, id_user) => {
     return topCategories;
 }
 
+const findCategoryByName = async (nome) => {
+    const category = await prisma.categorias.findUnique({
+        where: {
+            nome
+        }
+    });
+
+    return category;
+}
+
 module.exports = {
     addCategory,
     listCategories,
-    listTopCategories
+    listTopCategories,
+    findCategoryByName
 }

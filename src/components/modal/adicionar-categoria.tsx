@@ -1,47 +1,32 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { AuthContext } from '../../contexts/AuthContext';
-import { useContext } from 'react';
+import 'toastr/build/toastr.min.css';
+import toastr from 'toastr';
 
 interface abrirProps {
   open: boolean;
   onClose: () => void;
-  onAddSaldo: (novoSaldo: number) => void;
 }
 
 interface formData {
-  valor: string;
+  nome: string;
   descricao: string;
 }
 
-export function AdicionarSaldo({ open, onClose, onAddSaldo }: abrirProps) {
+export function AdicionarCategoria({ open, onClose }: abrirProps) {
   const { register, handleSubmit } = useForm<formData>();
-  const { user } = useContext(AuthContext);
 
-
-  const handleAddTransaction = async (data: formData) => {
-    const valorNumerico = parseFloat(data.valor.replace(',', '.'));
-  
+  const handleAddCategoria = async (data: formData) => {
     try {
-      await axios.post('http://localhost:3333/adicionar-lancamento', {
-        id_user: user?.id_user,
-        id_categoria: null,
-        saida: false,
-        valor: valorNumerico,
+      await axios.post('http://localhost:3333/adicionar-categoria', {
+        nome: data.nome,
         descricao: data.descricao,
       });
-
-      console.log(user?.id_user);
-  
-      const response = await axios.post(`http://localhost:3333/find-user-by-id`, {'id_user': user?.id_user});
-      const novoSaldo = response.data.saldo;
-  
-      onAddSaldo(novoSaldo);
-  
+      toastr.success('Categoria adicionada com sucesso!');
       onClose();
-    } catch (error) {
-      console.error("Erro ao adicionar saldo:", error);
+    } catch (error: any) {
+        toastr.error(error.response.data.message);
     }
   };
 
@@ -58,30 +43,27 @@ export function AdicionarSaldo({ open, onClose, onAddSaldo }: abrirProps) {
             transition
             className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
           >
-            <form onSubmit={handleSubmit(handleAddTransaction)}>
+            <form onSubmit={handleSubmit(handleAddCategoria)}>
               <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                 <div className="text-center">
                   <DialogTitle as="h3" className="text-lg font-semibold text-gray-900">
-                    Adicionar saldo
+                    Adicionar categoria
                   </DialogTitle>
                   <div className="mt-4">
                     <input
-                      {...register('valor')}
-                      type="text" // Tipo texto para permitir vírgulas
-                      name="valor"
-                      placeholder="Valor"
-                      className="w-full rounded-md border px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 mb-3"
+                      {...register('nome')}
+                      type="text"
+                      name="nome"
+                      placeholder="Nome"
                       required
-                      onInput={(e) => {
-                        const target = e.target as HTMLInputElement;
-                        target.value = target.value.replace(/[^0-9,]/g, '');
-                      }}
+                      className="w-full rounded-md border px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 mb-3"
                     />
                     <input
                       {...register('descricao')}
                       type="text"
                       name='descricao'
-                      placeholder="Descrição (opcional)"
+                      placeholder="Descrição"
+                      required
                       className="w-full rounded-md border px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 mb-3"
                     />
                   </div>

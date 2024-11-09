@@ -8,6 +8,8 @@ import Categoria from '../../components/categoria';
 import axios from 'axios';
 import { AdicionarSaldo } from '../../components/modal/adicionar-saldo';
 import { RemoverSaldo } from '../../components/modal/remover-saldo';
+import { AdicionarCategoria } from '../../components/modal/adicionar-categoria';
+import { ListarCategorias } from '../../components/modal/listar-categorias';
 
 interface Category {
   id_user: number;
@@ -20,6 +22,8 @@ const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isModalAdicionarSaldoOpen, setIsModalAdicionarSaldoOpen] = useState(false);
   const [isModalRemoverSaldoOpen, setIsModalRemoverSaldoOpen] = useState(false);
+  const [isModalAdicionarCategoriaOpen, setIsModalAdicionarCategoriaOpen] = useState(false);
+  const [isModalListarCategoriasOpen, setIsModalListarCategoriasOpen] = useState(false);
   const { user } = useContext(AuthContext);
   const [saldo, setSaldo] = useState(user?.saldo);
   const [totalGastos, setTotalGastos] = useState();
@@ -91,6 +95,14 @@ const Home = () => {
         onClose={() => setIsModalRemoverSaldoOpen(false)} 
         onRemoveSaldo={handleRemoveSaldo}
       />
+      <AdicionarCategoria
+        open={isModalAdicionarCategoriaOpen}
+        onClose={() => setIsModalAdicionarCategoriaOpen(false)}
+      />
+      <ListarCategorias
+        open={isModalListarCategoriasOpen}
+        onClose={() => setIsModalListarCategoriasOpen(false)}
+      />
 
       <div className="flex flex-col items-center p-8">
         <div className="bg-white shadow-lg rounded-lg p-6 mb-8 w-full max-w-[900px]">
@@ -118,10 +130,18 @@ const Home = () => {
                 <Categoria key={category.id_categoria} id_categoria={category.id_categoria} categoria={category.nome} valor={category.totalGastos} />
             ))}
           </div>
-          <div className="mt-4">
-          <h3 className="font-semibold text-lg">
-            Total de Gastos: R$ {Number(totalGastos)?.toFixed(2)}
-          </h3>
+          <div className="mt-4 flex items-center justify-between">
+            <h3 className="font-semibold text-lg">
+              Total de Gastos: R$ {Number(totalGastos)?.toFixed(2)}
+            </h3>
+            <div className="flex items-center space-x-2">
+              <button onClick={() => setIsModalListarCategoriasOpen(true)} type="button" className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-2 py-2 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none">
+                Ver todas
+              </button>
+              <div onClick={() => setIsModalAdicionarCategoriaOpen(true)} className="flex cursor-pointer me-2 pb-1 items-center justify-center w-10 h-10 bg-green-500 hover:bg-green-600 text-white text-2xl font-bold rounded-full shadow-lg transition duration-200">
+                +
+              </div>
+            </div>
           </div>
         </div>
       </div>
