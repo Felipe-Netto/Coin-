@@ -13,6 +13,18 @@ const addTransaction = async (request, response) => {
     }
 }
 
+const totalGastos = async (request, response) => {
+    try {
+        const { id_user } = request.params;
+        const total = await lancamentoModel.totalGastos(id_user);
+
+        return response.status(200).json(total);
+    } catch (error) {
+        return response.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     addTransaction,
+    totalGastos
 }
