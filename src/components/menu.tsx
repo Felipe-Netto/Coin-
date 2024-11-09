@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 const Menu = () => {
   const menuItems = [
-    { name: 'Visão Geral', path: '/visao-geral' },
+    { name: 'Visão Geral', path: '/home' },
     { name: 'Lançamentos', path: '/lancamento' },
     { name: 'Relatórios', path: '/relatorios' },
     { name: 'Metas', path: '/metas' },

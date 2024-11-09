@@ -53,17 +53,20 @@ export function RemoverSaldo({ open, onClose, onRemoveSaldo }: abrirProps) {
 
 
     useEffect(() => {
-        const fetchOptions = async () => {
-            try {
-                const response = await axios.get('http://localhost:3333/listar-categorias');
-                setOptions(response.data);
-            } catch (error) {
-                console.error('Erro ao buscar opções:', error);
-            }
-        };
-
-        fetchOptions();
-    }, []);
+        if(open){
+            const fetchOptions = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:3333/listar-categorias/${user?.id_user}`);
+                    setOptions(response.data);
+                } catch (error) {
+                    console.error('Erro ao buscar opções:', error);
+                }
+            };
+    
+            fetchOptions();
+        }
+        
+    }, [open]);
 
     const handleSelectChange = (event: any) => {
         setSelectedOption(event.target.value);
@@ -95,6 +98,7 @@ export function RemoverSaldo({ open, onClose, onRemoveSaldo }: abrirProps) {
                                             type="text"
                                             name='valor'
                                             placeholder="Valor"
+                                            required
                                             className="w-full rounded-md border px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 mb-3"
                                         />
                                         <select
@@ -102,6 +106,7 @@ export function RemoverSaldo({ open, onClose, onRemoveSaldo }: abrirProps) {
                                             id="dynamicSelect"
                                             name='id_categoria'
                                             value={selectedOption}
+                                            required
                                             onChange={handleSelectChange}
                                             className="w-full rounded-md border px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 mb-3"
                                         >

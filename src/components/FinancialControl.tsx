@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styles from './FinancialControl.module.css';
 import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
 
 interface Option {
   id_categoria: number;
@@ -22,12 +23,13 @@ const FinancialControl: React.FC = () => {
   const [transactionType, setTransactionType] = useState<'add' | 'remove'>('add'); // Estado para definir se é adicionar ou remover
   const [options, setOptions] = useState<Option[]>([]); // Estado para armazenar as opções
   const [selectedOption, setSelectedOption] = useState(''); // Estado para a opção selecionada
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const response = await axios.get('http://localhost:3333/listar-categorias'); // Requisição à API
-        setOptions(response.data); // Armazena as opções no estado
+        const response = await axios.get(`http://localhost:3333/listar-categorias/${user?.id_user}`); // Requisição à API
+        setOptions(response.data);
       } catch (error) {
         console.error('Erro ao buscar opções:', error);
       }
