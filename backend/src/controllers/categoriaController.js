@@ -8,9 +8,7 @@ const addCategory = async (request, response) => {
         const category = await categoriaModel.addCategory(nome, descricao);
 
         return response.status(201).json(category);
-        console.log('Categoria adicionada: ', category);
     } catch (error) {
-        console.log('Erro ao adicionar categoria: ', error);
         return response.status(500).json({ error: error.message });
     }
 }
@@ -26,7 +24,22 @@ const listCategories = async (request, response) => {
     }
 }
 
+const listTopCategories = async (request, response) => {
+    try {
+        const { id_user } = request.query;
+        const categories = await categoriaModel.listTopCategories(4, id_user);
+
+        console.log(request.query);
+        
+        return response.status(200).json(categories);
+    } catch (error) {
+        console.log('Erro ao listar categorias: ', error);
+        return response.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     addCategory,
-    listCategories
+    listCategories,
+    listTopCategories
 }

@@ -10,6 +10,7 @@ import { AdicionarSaldo } from '../../components/modal/adicionar-saldo';
 import { RemoverSaldo } from '../../components/modal/remover-saldo';
 
 interface Category {
+  id_user: number;
   id_categoria: number;
   nome: string;
   totalGastos: number;
@@ -17,32 +18,65 @@ interface Category {
 
 const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isModalAdicionarSaldoOpen, setIsModalAdicionarSaldoOpen] = useState(false)
-  const [isModalRemoverSaldoOpen, setIsModalRemoverSaldoOpen] = useState(false)
+  const [isModalAdicionarSaldoOpen, setIsModalAdicionarSaldoOpen] = useState(false);
+  const [isModalRemoverSaldoOpen, setIsModalRemoverSaldoOpen] = useState(false);
   const { user } = useContext(AuthContext);
-  console.log(user, 'user');
   const [saldo, setSaldo] = useState(user?.saldo);
+  const [totalGastos, setTotalGastos] = useState();
+
+  const fetchCategories = async () => {
+    if (!user?.id_user) {
+      console.log('User ID is not available yet');
+      return;
+    }
+
+    try {
+      const { data } = await axios.get('http://localhost:3333/listar-top-categorias', {
+        params: {
+          id_user: user.id_user,
+        },
+      });
+
+      console.log('Categories:', data);
+      setCategories(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchTotalGastos = async () => {
+    if (!user?.id_user) {
+      console.log('User ID is not available yet');
+      return;
+    }
+
+    try {
+      const { data } = await axios.get(`http://localhost:3333/total-gastos/${user.id_user}`);
+      console.log('Total Gastos:', data);
+      setTotalGastos(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (user?.id_user) {
+      fetchTotalGastos();
+      fetchCategories();
+    }
+  }, [user]);
 
   const handleAddSaldo = (novoSaldo: number) => {
     setSaldo(novoSaldo);
+    fetchCategories();
+    fetchTotalGastos();
   };
 
   const handleRemoveSaldo = (novoSaldo: number) => {
     setSaldo(novoSaldo);
-  };
-  
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { data } = await axios.get('http://localhost:3333/listar-categorias');
-        setCategories(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     fetchCategories();
-  }, []);
+    fetchTotalGastos();
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -81,12 +115,13 @@ const Home = () => {
           <h2 className="text-2xl font-bold text-blue-900 mb-4">Gastos por Categoria</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {categories.map((category) => (
-                <Categoria id_categoria={category.id_categoria} categoria={category.nome} valor={category.totalGastos} />
+                <Categoria key={category.id_categoria} id_categoria={category.id_categoria} categoria={category.nome} valor={category.totalGastos} />
             ))}
           </div>
           <div className="mt-4">
-            <h3 className="font-semibold text-lg">Total de Gastos</h3>
-            {/* <p className="text-gray-700">R$ {totalGastos.toFixed(2)}</p> */}
+          <h3 className="font-semibold text-lg">
+            Total de Gastos: R$ {Number(totalGastos)?.toFixed(2)}
+          </h3>
           </div>
         </div>
       </div>

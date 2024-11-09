@@ -21,6 +21,20 @@ const addTransaction = async (id_user, id_categoria, saida, valor, descricao) =>
     return lancamento;
 }
 
+const totalGastos = async (id_user) => {
+    const lancamentos = await prisma.lancamentos.findMany({
+        where: {
+            id_user: parseInt(id_user, 10),
+            saida: true
+        }
+    });
+
+    const totalGastos = lancamentos.reduce((acc, lancamento) => acc + Number(lancamento.valor), 0);
+
+    return totalGastos;
+}
+
 module.exports = {
     addTransaction,
+    totalGastos
 }

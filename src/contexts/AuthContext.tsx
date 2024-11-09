@@ -49,6 +49,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 router.push("/home");
             }).catch((error) => {
                 console.log('ERROR:', error);
+                router.push("/");
             });
         }else {
             router.push("/");
