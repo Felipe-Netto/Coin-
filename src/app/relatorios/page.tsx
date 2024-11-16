@@ -1,32 +1,66 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { format, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Menu from '../../components/menu';
-import EntradasSaidas from './entradasesaidas';
+import axios from 'axios';
+import { AuthContext } from '../../contexts/AuthContext';
+
+interface Lancamento {
+    id_lancamento: number;
+    id_meta: number;
+    valor: number;
+    created_at: string;
+    saida: boolean;
+  }
 
 const Relatorios = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [isOpen, setIsOpen] = useState(false); // Estado para controlar o pop up
+    const { user } = useContext(AuthContext);
+    const [lancamentos, setLancamentos] = useState<Lancamento[]>([]);
+    const [filtro, setFiltro] = useState('todos');
 
-    // Função para avançar para o próximo mês
+    const handleFiltroChange = (event: any) => {
+        setFiltro(event.target.value);
+    };
+
+    const lancamentosFiltrados = lancamentos.filter(lancamento => {
+        if (filtro === 'entradas') return !lancamento.saida;
+        if (filtro === 'saidas') return lancamento.saida;
+        return true;
+    });
+
     const handleNextMonth = () => {
         setSelectedDate(addMonths(selectedDate, 1));
     };
 
-    // Função para retroceder para o mês anterior
     const handlePrevMonth = () => {
         setSelectedDate(subMonths(selectedDate, 1));
     };
 
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
+    const buscarLancamentosDoMes = () => {
+        axios.get(`http://localhost:3333/lancamentos-mes/${user?.id_user}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`)
+        .then(response => {
+            setLancamentos(response.data);
+        }).catch(error => {
+            console.log(error);
+        });
+    };
+
+    useEffect(() => {
+        if (!user?.id_user) {
+            console.log('User ID is not available yet');
+            return;
+        }
+    
+        buscarLancamentosDoMes();
+    }, [selectedDate, user?.id_user]);
 
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <div className="bg-[#f7f9f8] min-h-screen">
             <Menu />
-            <div className="min-h-screen bg-[#f7f9f8] flex items-center justify-center p-4">
+            <div className="flex justify-center p-4">
                 <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl p-6">
                     {/* Navegação de meses */}
                     <div className="flex items-center justify-between mb-4">
@@ -43,42 +77,53 @@ const Relatorios = () => {
                             </button>
                         </div>
                     </div>
-
-                    
-                    <div className="flex space-x-4 mb-6">
-                        {/* Botão para abrir o pop up */}
-                        <button
-                            onClick={openModal}
-                            className="px-4 py-2 bg-white-500 text-gray rounded-lg hover:bg-gray-200"
-                        >
-                            Entradas x Saídas
-                        </button>
+                    {/* Filtro de lançamentos */}
+                    <div className="flex items-center space-x-4 mb-4">
+                        <label htmlFor="filtro" className="text-gray-600">Mostrar:</label>
+                        <select id="filtro" value={filtro} onChange={handleFiltroChange} className="p-2 border rounded-md">
+                            <option value="todos">Todos</option>
+                            <option value="entradas">Entradas</option>
+                            <option value="saidas">Saídas</option>
+                        </select>
                     </div>
-
-
-                    {/* Empty State */}
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <p className="text-gray-500">Nenhum lançamento no período</p>
+                    <div className="flex flex-col items-center justify-center">
+                        {lancamentosFiltrados.length > 0 ? (
+                            <table className="min-w-full bg-white">
+                                <thead>
+                                    <tr>
+                                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                            Data
+                                        </th>
+                                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                            Valor
+                                        </th>
+                                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                            Tipo
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {lancamentosFiltrados.map((lancamento, index) => (
+                                        <tr key={index}>
+                                            <td className="py-2 px-4 border-b border-gray-200">
+                                                {format(new Date(lancamento.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
+                                            </td>
+                                            <td className="py-2 px-4 border-b border-gray-200">
+                                                R$ {Number(lancamento.valor).toFixed(2)}
+                                            </td>
+                                            <td className="py-2 px-4 border-b border-gray-200">
+                                                {lancamento.saida ? 'Saída' : 'Entrada'}
+                                            </td>
+                                        </tr>
+                                    ))}
+                             </tbody>
+                            </table>
+                        ) : (
+                            <p className="text-gray-500">Nenhum lançamento no período</p>
+                        )}
                     </div>
                 </div>
             </div>
-
-            {/* Pop up */}
-            {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white shadow-lg rounded-lg w-full max-w-2xl p-6 relative">
-                        <button
-                            onClick={closeModal}
-                            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-                        >
-                            &times; {/* Botão para fechar o pop up */}
-                        </button>
-                        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Entradas e Saídas</h2>
-                        {/* Conteúdo do pop up */}
-                        <p>Detalhes das Entradas e Saídas...</p>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

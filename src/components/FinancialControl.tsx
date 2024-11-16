@@ -39,7 +39,7 @@ const FinancialControl: React.FC = () => {
   }, []);
 
   const handleSelectChange = (event: any) => {
-    setSelectedOption(event.target.value); // Atualiza o estado com o valor selecionado
+    setSelectedOption(event.target.value);
   };
 
 
@@ -127,6 +127,23 @@ const FinancialControl: React.FC = () => {
           ))}
         </select>
       </div>
+
+      <div id='div_select_meta' className='hidden'>
+        <label htmlFor="dynamicSelect" className="block font-medium">Selecione uma meta:</label>
+        <select
+          id="dynamicSelect"
+          value={selectedOption}
+          onChange={handleSelectChange}
+          className={`${styles.input} ${styles.inputText}`}
+        >
+          <option value="">Selecione...</option>
+          {options.map((option) => (
+            <option key={option.id_categoria} value={option.id_categoria}>
+              {option.nome}
+            </option>
+          ))}
+        </select>
+      </div>
   
       <input
         type="date" // Campo de entrada para a data
@@ -135,22 +152,6 @@ const FinancialControl: React.FC = () => {
         className={`${styles.input} ${styles.inputText}`} // Classe para estilo consistente
       />
       <button onClick={handleAddTransaction} className={styles.addButton}>Adicionar</button>
-      <div className="spacer" style={{ marginBottom: '20px' }}></div>
-
-      <h2 className="font-bold text-blue-900 mb-1">Transações Efetuadas:</h2>
-      <ul className={styles.transactionList}>
-        {sortedTransactions.map((transaction, index) => (
-          <li key={index}>
-            {transaction.description ? `${transaction.description}` : ''} 
-            <div>
-              {transaction.amount < 0 
-                ? `-R$${Math.abs(transaction.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
-                : `R$${transaction.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} 
-            </div>
-            {transaction.date && <div>{transaction.date}</div>} {/* Exibe a data em uma nova linha */}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };
