@@ -17,6 +17,7 @@ router.get('/listar-top-categorias', categoryController.listTopCategories);
 
 router.post('/adicionar-lancamento', lancamentoController.addTransaction);
 router.get('/total-gastos/:id_user', lancamentoController.totalGastos);
+router.get('/lancamentos-mes/:id_user/:mes/:ano', lancamentoController.listarLancamentosDoMes);
 
 router.post('/adicionar-meta', metaController.addMeta);
 router.get('/listar-metas/:id_user', metaController.listMetas);

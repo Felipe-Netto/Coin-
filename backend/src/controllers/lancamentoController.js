@@ -25,7 +25,21 @@ const totalGastos = async (request, response) => {
     }
 }
 
+const listarLancamentosDoMes = async (request, response) => {
+    try {
+        const { id_user, mes, ano } = request.params;
+
+        console.log(id_user, mes, ano);
+        const lancamentos = await lancamentoModel.listarLancamentosDoMes(id_user, mes, ano);
+
+        return response.status(200).json(lancamentos);
+    } catch (error) {
+        return response.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     addTransaction,
-    totalGastos
+    totalGastos,
+    listarLancamentosDoMes
 }
