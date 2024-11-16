@@ -25,7 +25,7 @@ interface formData {
 export function RemoverSaldo({ open, onClose, onRemoveSaldo }: abrirProps) {
     const [options, setOptions] = useState<Option[]>([]);
     const [selectedOption, setSelectedOption] = useState('');
-    const { register, handleSubmit } = useForm<formData>();
+    const { register, handleSubmit, reset } = useForm<formData>();
     const { user } = useContext(AuthContext);
 
     const handleRemoveTransaction = async (data: formData) => {
@@ -35,6 +35,7 @@ export function RemoverSaldo({ open, onClose, onRemoveSaldo }: abrirProps) {
             await axios.post('http://localhost:3333/adicionar-lancamento', {
                 id_user: user?.id_user,
                 id_categoria: Number(data.id_categoria),
+                id_meta: null,
                 saida: true,
                 valor: valorNumerico,
                 descricao: data.descricao,
@@ -43,6 +44,7 @@ export function RemoverSaldo({ open, onClose, onRemoveSaldo }: abrirProps) {
             const response = await axios.post(`http://localhost:3333/find-user-by-id`, { 'id_user': user?.id_user });
             const novoSaldo = response.data.saldo;
 
+            reset();
             onRemoveSaldo(novoSaldo);
 
             onClose();
@@ -50,7 +52,6 @@ export function RemoverSaldo({ open, onClose, onRemoveSaldo }: abrirProps) {
             console.error("Erro ao remover saldo:", error);
         }
     };
-
 
     useEffect(() => {
         if(open){

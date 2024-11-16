@@ -2,7 +2,7 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 interface abrirProps {
   open: boolean;
@@ -12,38 +12,66 @@ interface abrirProps {
 
 interface formData {
   valor: string;
+  id_meta: number;	
   descricao: string;
 }
 
-export function AdicionarSaldo({ open, onClose, onAddSaldo }: abrirProps) {
-  const { register, handleSubmit } = useForm<formData>();
-  const { user } = useContext(AuthContext);
+interface Option {
+  id_meta: number;
+  nome: string;
+}
 
+export function AdicionarSaldo({ open, onClose, onAddSaldo }: abrirProps) {
+  const { register, handleSubmit, reset } = useForm<formData>();
+  const { user } = useContext(AuthContext);
+  const [options, setOptions] = useState<Option[]>([]);
+  const [selectedOption, setSelectedOption] = useState('');
 
   const handleAddTransaction = async (data: formData) => {
     const valorNumerico = parseFloat(data.valor.replace(',', '.'));
   
     try {
+      
       await axios.post('http://localhost:3333/adicionar-lancamento', {
         id_user: user?.id_user,
         id_categoria: null,
+        id_meta: Number(data.id_meta) === 0 ? null : Number(data.id_meta),
         saida: false,
         valor: valorNumerico,
         descricao: data.descricao,
       });
-
-      console.log(user?.id_user);
   
       const response = await axios.post(`http://localhost:3333/find-user-by-id`, {'id_user': user?.id_user});
       const novoSaldo = response.data.saldo;
-  
+
+      reset();
       onAddSaldo(novoSaldo);
-  
       onClose();
+
     } catch (error) {
       console.error("Erro ao adicionar saldo:", error);
     }
   };
+
+  const handleSelectChange = (event: any) => {
+    setSelectedOption(event.target.value);
+  };
+
+  useEffect(() => {
+    if(open){
+        const fetchOptions = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3333/listar-metas/${user?.id_user}`);
+                setOptions(response.data);
+            } catch (error) {
+                console.error('Erro ao buscar opções:', error);
+            }
+        };
+
+        fetchOptions();
+    }
+    
+}, [open]);
 
   return (
     <Dialog open={open} onClose={onClose} className="relative z-10">
@@ -77,6 +105,21 @@ export function AdicionarSaldo({ open, onClose, onAddSaldo }: abrirProps) {
                         target.value = target.value.replace(/[^0-9,]/g, '');
                       }}
                     />
+                    <select
+                        {...register('id_meta')}
+                        id="dynamicSelect"
+                        name='id_meta'
+                        value={selectedOption}
+                        onChange={handleSelectChange}
+                        className="w-full rounded-md border px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 mb-3"
+                    >
+                        <option className='text-gray-900' value="">Escolha uma meta</option>
+                        {options.map((option) => (
+                            <option key={option.id_meta} value={option.id_meta}>
+                                {option.nome}
+                            </option>
+                        ))}
+                    </select>
                     <input
                       {...register('descricao')}
                       type="text"

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Menu from '../../components/menu';
 import { AuthContext } from '../../contexts/AuthContext';
 import Categoria from '../../components/categoria';
@@ -41,7 +40,6 @@ const Home = () => {
         },
       });
 
-      console.log('Categories:', data);
       setCategories(data);
     } catch (error) {
       console.log(error);

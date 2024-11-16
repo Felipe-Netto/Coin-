@@ -1,45 +1,73 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import toastr from 'toastr';
+import { AuthContext } from '../contexts/AuthContext';
+import { Goal } from '../types/types';
 
-interface GoalFormProps {
-  addGoal: (goal: {
-    id: number;
-    name: string;
-    targetAmount: number;
-    currentAmount: number;
-    targetDate: string;
-  }) => void;
+interface abrirProps {
+  onAddGoal: (newGoals: Goal[]) => void;
 }
 
-const GoalForm: React.FC<GoalFormProps> = ({ addGoal }) => {
-  const [name, setName] = useState('');
-  const [targetAmount, setTargetAmount] = useState(0);
-  const [targetDate, setTargetDate] = useState('');
+interface formData {
+  nome: string;
+  descricao: string;
+  valor_alvo: number;
+  data_alvo: string;
+}
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newGoal = {
-      id: Date.now(),
-      name,
-      targetAmount,
-      currentAmount: 0,
-      targetDate,
-    };
-    addGoal(newGoal);
-    setName('');
-    setTargetAmount(0);
-    setTargetDate('');
+const GoalForm = ({ onAddGoal }: abrirProps) => {
+  const { register, handleSubmit, reset } = useForm<formData>();
+  const { user } = useContext(AuthContext);
+
+  const handleCriarMeta = async (data: formData) => {
+    const dataAlvo = new Date(data.data_alvo);
+    try {
+      await axios.post('http://localhost:3333/adicionar-meta', {
+        id_user: user?.id_user,
+        nome: data.nome,
+        descricao: data.descricao,
+        valor_alvo: data.valor_alvo,
+        data_alvo: dataAlvo
+      }).then(() => {
+        toastr.success('Meta criada com sucesso!');
+
+        axios.get('http://localhost:3333/listar-metas/' + user?.id_user)
+        .then(response => {
+          onAddGoal(response.data);
+          reset();
+        }).catch((error) => {
+          toastr.error(error.response.data.message);
+        });
+
+      }).catch((error) => {
+        toastr.error(error.response.data.message);
+      });
+    } catch (error) {
+      toastr.error('Erro ao criar meta');
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
+    <form onSubmit={handleSubmit(handleCriarMeta)} style={styles.form}>
       <div style={styles.inputContainer}>
         <label>Nome da Meta:</label>
         <input
+          {...register('nome')}
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          name='nome'
+          required
+          style={styles.input}
+        />
+      </div>
+      <div style={styles.inputContainer}>
+        <label>Descrição:</label>
+        <input
+          {...register('descricao')}
+          type="text"
+          name='descricao'
           required
           style={styles.input}
         />
@@ -47,9 +75,9 @@ const GoalForm: React.FC<GoalFormProps> = ({ addGoal }) => {
       <div style={styles.inputContainer}>
         <label>Valor da Meta:</label>
         <input
+          {...register('valor_alvo')}
           type="number"
-          value={targetAmount}
-          onChange={(e) => setTargetAmount(Number(e.target.value))}
+          name='valor_alvo'
           required
           style={styles.input}
         />
@@ -57,9 +85,8 @@ const GoalForm: React.FC<GoalFormProps> = ({ addGoal }) => {
       <div style={styles.inputContainer}>
         <label>Data Alvo:</label>
         <input
+          {...register('data_alvo')}
           type="date"
-          value={targetDate}
-          onChange={(e) => setTargetDate(e.target.value)}
           required
           style={styles.input}
         />

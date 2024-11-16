@@ -3,9 +3,10 @@ const prisma = require('../../lib/prisma.js');
 
 const addTransaction = async (request, response) => {
     try {
-        const { id_user, id_categoria, saida, valor, descricao } = request.body;
+        console.log(request.body);
+        const { id_user, id_categoria, id_meta, saida, valor, descricao } = request.body;
 
-        const transaction = await lancamentoModel.addTransaction(id_user, id_categoria, saida, valor, descricao);
+        const transaction = await lancamentoModel.addTransaction(id_user, id_categoria, id_meta, saida, valor, descricao);
 
         return response.status(201).json(transaction);
     } catch (error) {
