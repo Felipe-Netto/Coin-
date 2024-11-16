@@ -3,6 +3,7 @@
 import React, { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import 'toastr/build/toastr.min.css';
 import toastr from 'toastr';
 import { AuthContext } from '../contexts/AuthContext';
 import { Goal } from '../types/types';
@@ -23,7 +24,7 @@ const GoalForm = ({ onAddGoal }: abrirProps) => {
   const { user } = useContext(AuthContext);
 
   const handleCriarMeta = async (data: formData) => {
-    const dataAlvo = new Date(data.data_alvo);
+    const dataAlvo = new Date(data.data_alvo + 'T00:00:00').toISOString();
     try {
       await axios.post('http://localhost:3333/adicionar-meta', {
         id_user: user?.id_user,
@@ -32,6 +33,7 @@ const GoalForm = ({ onAddGoal }: abrirProps) => {
         valor_alvo: data.valor_alvo,
         data_alvo: dataAlvo
       }).then(() => {
+
         toastr.success('Meta criada com sucesso!');
 
         axios.get('http://localhost:3333/listar-metas/' + user?.id_user)
