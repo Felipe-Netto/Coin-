@@ -1,10 +1,11 @@
 const prisma = require('../../lib/prisma.js');
 
-const addTransaction = async (id_user, id_categoria, saida, valor, descricao) => {
+const addTransaction = async (id_user, id_categoria, id_meta, saida, valor, descricao) => {
     const lancamento = await prisma.lancamentos.create({
         data: {
             id_user,
             id_categoria,
+            id_meta,
             saida,
             valor,
             descricao

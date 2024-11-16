@@ -46,7 +46,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 const user = response.data;
                 console.log(user);
                 setUser(user);
-                router.push("/home");
             }).catch((error) => {
                 console.log('ERROR:', error);
                 router.push("/");

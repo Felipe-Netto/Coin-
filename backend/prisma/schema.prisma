@@ -25,6 +25,7 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   lancamentos Lancamentos[]
+  metas Metas[]
 }
 
 model Categorias {
@@ -42,8 +43,25 @@ model Lancamentos {
   id_user Int
   categoria Categorias? @relation(fields: [id_categoria], references: [id_categoria])
   id_categoria Int?
+  meta Metas? @relation(fields: [id_meta], references: [id_meta])
+  id_meta Int?
   saida Boolean
   valor Decimal
   descricao String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Metas {
+  id_meta Int @id @default(autoincrement())
+  user User @relation(fields: [id_user], references: [id_user])
+  id_user Int
+  nome String
+  valor_alvo Decimal
+  data_alvo DateTime
+  descricao String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  lancamentos Lancamentos[]
 }
  

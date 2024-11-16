@@ -1,37 +1,60 @@
+// page.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import GoalForm from '../../components/formulariometas';
 import GoalProgress from '../../components/progressometas';
 import Menu from '../../components/menu';
-
-interface Goal {
-  id: number;
-  name: string;
-  targetAmount: number;
-  currentAmount: number;
-  targetDate: string;
-  contributions: { amount: number; date: string }[]; // Adicionando a propriedade 'contributions'
-}
+import axios from 'axios';
+import { AuthContext } from '../../contexts/AuthContext';
+import { Goal } from '../../types/types';
 
 const GoalsPage: React.FC = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
+  const { user } = useContext(AuthContext);
 
-  const addGoal = (newGoal: Omit<Goal, 'contributions'>) => { // Modificado para omitir 'contributions'
-    setGoals([
-      ...goals,
-      { ...newGoal, contributions: [] }, // Adicionando 'contributions: []' ao novo objetivo
-    ]);
+  const addGoal = (newGoals: Goal[]) => {
+    setGoals(newGoals);
   };
+
+  useEffect(() => {
+    if (!user?.id_user) {
+      console.log('User ID is not available yet');
+      return;
+    }
+
+    let isMounted = true;
+
+    console.log('Fetching goals for user ID:', user.id_user);
+
+    axios.get('http://localhost:3333/listar-metas/' + user.id_user)
+      .then(response => {
+        if (isMounted) {
+          console.log('Response data:', response.data);
+          setGoals(response.data);
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao buscar metas:', error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.id_user]);
+
+  useEffect(() => {
+    console.log('Goals updated:', goals);
+  }, [goals]);
 
   const updateGoalProgress = (id: number, amount: number) => {
     setGoals(goals.map(goal => 
-      goal.id === id
+      goal.id_meta === id
         ? {
             ...goal,
-            currentAmount: goal.currentAmount + amount,
+            valor_atual: goal.valor_atual + amount,
             contributions: [
-              ...goal.contributions,
+              ...(goal.contributions || []), // Garante que contributions é um array
               { amount, date: new Date().toLocaleDateString() },
             ],
           }
@@ -40,7 +63,8 @@ const GoalsPage: React.FC = () => {
   };
 
   const deleteGoal = (id: number) => {
-    setGoals(goals.filter(goal => goal.id !== id));
+    setGoals(goals.filter(goal => goal.id_meta !== id));
+    axios.delete(`http://localhost:3333/deletar-meta/${id}`)
   };
 
   return (
@@ -50,18 +74,22 @@ const GoalsPage: React.FC = () => {
         <h1 style={styles.header}></h1>
         <div style={styles.contentContainer}>
           <div style={styles.formContainer}>
-            <GoalForm addGoal={addGoal} />
+            <GoalForm onAddGoal={addGoal} />
           </div>
           <div style={styles.goalList}>
-            {goals.map(goal => (
-              <div key={goal.id} style={styles.goalContainer}>
-                <GoalProgress
-                  goal={goal}
-                  updateGoalProgress={updateGoalProgress}
-                  deleteGoal={deleteGoal}
-                />
-              </div>
-            ))}
+            {goals && goals.length > 0 ? (
+              goals.map(goal => (
+                <div key={goal.id_meta} style={styles.goalContainer}>
+                  <GoalProgress
+                    goal={goal}
+                    updateGoalProgress={updateGoalProgress}
+                    deleteGoal={deleteGoal}
+                  />
+                </div>
+              ))
+            ) : (
+              <p>Nenhuma meta encontrada.</p>
+            )}
           </div>
         </div>
       </div>
