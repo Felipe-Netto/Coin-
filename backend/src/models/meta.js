@@ -46,10 +46,21 @@ const deleteMeta = async (id_meta) => {
     return meta;
 }
 
+const findMetaById = async (id_meta) => {
+    const meta = await prisma.metas.findUnique({
+        where: {
+            id_meta: parseInt(id_meta)
+        }
+    });
+
+    return meta;
+}
+
 module.exports = { listMetas };
 
 module.exports = {
     addMeta,
     listMetas,
-    deleteMeta
+    deleteMeta,
+    findMetaById
 }

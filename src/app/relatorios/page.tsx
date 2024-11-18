@@ -10,16 +10,57 @@ import { AuthContext } from '../../contexts/AuthContext';
 interface Lancamento {
     id_lancamento: number;
     id_meta: number;
+    id_categoria: number;
     valor: number;
     created_at: string;
     saida: boolean;
-  }
+}
 
 const Relatorios = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const { user } = useContext(AuthContext);
     const [lancamentos, setLancamentos] = useState<Lancamento[]>([]);
     const [filtro, setFiltro] = useState('todos');
+    const [metaNomes, setMetaNomes] = useState<{ [key: number]: string }>({});
+    const [categorias, setCategorias] = useState<{ [key: number]: string }>({});
+
+    const findMeta = (idMeta: number) => {
+        if (metaNomes[idMeta]) {
+            return Promise.resolve(metaNomes[idMeta]);
+        }
+
+        return axios.get(`http://localhost:3333/buscar-meta/${idMeta}`)
+            .then(response => {
+                setMetaNomes(prevMetaNomes => ({
+                    ...prevMetaNomes,
+                    [idMeta]: response.data.nome
+                }));
+                return response.data.nome;
+            })
+            .catch(error => {
+                console.log(error);
+                return '-';
+            });
+    };
+
+    const findCategoria = (idCategoria: number) => {
+        if (categorias[idCategoria]) {
+            return Promise.resolve(categorias[idCategoria]);
+        }
+
+        return axios.get(`http://localhost:3333/buscar-categoria/${idCategoria}`)
+            .then(response => {
+                setCategorias(prevCategorias => ({
+                    ...prevCategorias,
+                    [idCategoria]: response.data.nome
+                }));
+                return response.data.nome;
+            })
+            .catch(error => {
+                console.log(error);
+                return '-';
+            });
+    };
 
     const handleFiltroChange = (event: any) => {
         setFiltro(event.target.value);
@@ -41,11 +82,13 @@ const Relatorios = () => {
 
     const buscarLancamentosDoMes = () => {
         axios.get(`http://localhost:3333/lancamentos-mes/${user?.id_user}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`)
-        .then(response => {
-            setLancamentos(response.data);
-        }).catch(error => {
-            console.log(error);
-        });
+            .then(response => {
+                setLancamentos(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     };
 
     useEffect(() => {
@@ -53,14 +96,27 @@ const Relatorios = () => {
             console.log('User ID is not available yet');
             return;
         }
-    
+
         buscarLancamentosDoMes();
     }, [selectedDate, user?.id_user]);
 
+    useEffect(() => {
+        if (lancamentos.length > 0) {
+            lancamentos.forEach(lancamento => {
+                if (lancamento.id_meta) {
+                    findMeta(lancamento.id_meta);
+                }
+                if (lancamento.id_categoria) {
+                    findCategoria(lancamento.id_categoria);
+                }
+            });
+        }
+    }, [lancamentos]);
+
     return (
-        <div className="bg-[#f7f9f8] min-h-screen">
+        <div className="bg-gray-100 min-h-screen">
             <Menu />
-            <div className="flex justify-center p-4">
+            <div className="bg-[#f7f9f8] flex justify-center p-4">
                 <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl p-6">
                     {/* Navegação de meses */}
                     <div className="flex items-center justify-between mb-4">
@@ -86,38 +142,53 @@ const Relatorios = () => {
                             <option value="saidas">Saídas</option>
                         </select>
                     </div>
+                    {/* Lista de lançamentos */}
                     <div className="flex flex-col items-center justify-center">
                         {lancamentosFiltrados.length > 0 ? (
-                            <table className="min-w-full bg-white">
-                                <thead>
-                                    <tr>
-                                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
-                                            Data
-                                        </th>
-                                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
-                                            Valor
-                                        </th>
-                                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
-                                            Tipo
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {lancamentosFiltrados.map((lancamento, index) => (
-                                        <tr key={index}>
-                                            <td className="py-2 px-4 border-b border-gray-200">
-                                                {format(new Date(lancamento.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
-                                            </td>
-                                            <td className="py-2 px-4 border-b border-gray-200">
-                                                R$ {Number(lancamento.valor).toFixed(2)}
-                                            </td>
-                                            <td className="py-2 px-4 border-b border-gray-200">
-                                                {lancamento.saida ? 'Saída' : 'Entrada'}
-                                            </td>
+                            <div className="max-h-96 overflow-y-auto w-full">
+                                <table className="min-w-full bg-white">
+                                    <thead>
+                                        <tr>
+                                            <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                                Data
+                                            </th>
+                                            <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                                Meta
+                                            </th>
+                                            <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                                Categoria
+                                            </th>
+                                            <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                                Valor
+                                            </th>
+                                            <th className="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                                Tipo
+                                            </th>
                                         </tr>
-                                    ))}
-                             </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {lancamentosFiltrados.map((lancamento, index) => (
+                                            <tr key={index}>
+                                                <td className="py-2 px-4 border-b border-gray-200">
+                                                    {format(new Date(lancamento.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
+                                                </td>
+                                                <td className="py-2 px-4 border-b border-gray-200">
+                                                    {lancamento.id_meta ? (metaNomes[lancamento.id_meta]) : '-'}
+                                                </td>
+                                                <td className="py-2 px-4 border-b border-gray-200">
+                                                    {lancamento.id_categoria ? (categorias[lancamento.id_categoria]) : '-'}
+                                                </td>
+                                                <td className="py-2 px-4 border-b border-gray-200">
+                                                    R$ {Number(lancamento.valor).toFixed(2)}
+                                                </td>
+                                                <td className="py-2 px-4 border-b border-gray-200">
+                                                    {lancamento.saida ? 'Saída' : 'Entrada'}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         ) : (
                             <p className="text-gray-500">Nenhum lançamento no período</p>
                         )}

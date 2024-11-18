@@ -39,8 +39,21 @@ const deleteMeta = async (request, response) => {
     }
 }
 
+const findMetaById = async (request, response) => {
+    try {
+        const { id_meta } = request.params;
+
+        const meta = await metaModel.findMetaById(id_meta);
+
+        return response.status(200).json(meta);
+    } catch (error) {
+        return response.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     addMeta,
     listMetas,
-    deleteMeta
+    deleteMeta,
+    findMetaById
 }

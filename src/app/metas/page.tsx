@@ -8,6 +8,7 @@ import Menu from '../../components/menu';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
 import { Goal } from '../../types/types';
+import toastr from 'toastr';
 
 const GoalsPage: React.FC = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -65,6 +66,7 @@ const GoalsPage: React.FC = () => {
   const deleteGoal = (id: number) => {
     setGoals(goals.filter(goal => goal.id_meta !== id));
     axios.delete(`http://localhost:3333/deletar-meta/${id}`)
+    toastr.success('Meta deletada com sucesso!');
   };
 
   return (

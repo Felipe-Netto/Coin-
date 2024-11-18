@@ -83,9 +83,20 @@ const findCategoryByName = async (nome) => {
     return category;
 }
 
+const findCategoryById = async (id_categoria) => {
+    const category = await prisma.categorias.findUnique({
+        where: {
+            id_categoria: parseInt(id_categoria, 10)
+        }
+    });
+
+    return category;
+}
+
 module.exports = {
     addCategory,
     listCategories,
     listTopCategories,
-    findCategoryByName
+    findCategoryByName,
+    findCategoryById
 }
