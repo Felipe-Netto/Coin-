@@ -9,6 +9,7 @@ import { AdicionarSaldo } from '../../components/modal/adicionar-saldo';
 import { RemoverSaldo } from '../../components/modal/remover-saldo';
 import { AdicionarCategoria } from '../../components/modal/adicionar-categoria';
 import { ListarCategorias } from '../../components/modal/listar-categorias';
+import toastr from 'toastr';  
 
 interface Category {
   id_user: number;
@@ -65,19 +66,31 @@ const Home = () => {
     if (user?.id_user) {
       fetchTotalGastos();
       fetchCategories();
+      buscarSaldo();
     }
   }, [user]);
+
+  const buscarSaldo = async () => {
+    try {
+      const response = await axios.post(`http://localhost:3333/find-user-by-id`, { 'id_user': user?.id_user });
+      setSaldo(response.data.saldo);
+    } catch (error) {
+      console.error('Erro ao buscar saldo:', error);
+    }
+  }
 
   const handleAddSaldo = (novoSaldo: number) => {
     setSaldo(novoSaldo);
     fetchCategories();
     fetchTotalGastos();
+    toastr.success('Saldo adicionado com sucesso!');
   };
 
   const handleRemoveSaldo = (novoSaldo: number) => {
     setSaldo(novoSaldo);
     fetchCategories();
     fetchTotalGastos();
+    toastr.success('Saldo removido com sucesso!');
   };
 
   return (
