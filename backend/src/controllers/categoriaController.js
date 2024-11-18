@@ -44,8 +44,29 @@ const listTopCategories = async (request, response) => {
     }
 }
 
+const findCategoryById = async (request, response) => {
+    try {
+        const { id_categoria } = request.params;
+        const category = await prisma.categorias.findUnique({
+            where: {
+                id_categoria: parseInt(id_categoria, 10)
+            }
+        });
+
+        if (!category) {
+            return response.status(404).json({ message: 'Categoria não encontrada' });
+        }
+
+        return response.status(200).json(category);
+    } catch (error) {
+        console.log('Erro ao buscar categoria: ', error);
+        return response.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     addCategory,
     listCategories,
-    listTopCategories
+    listTopCategories,
+    findCategoryById
 }
