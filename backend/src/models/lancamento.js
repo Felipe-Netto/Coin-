@@ -12,6 +12,10 @@ const addTransaction = async (id_user, id_categoria, id_meta, saida, valor, desc
         }
     });
 
+    if(lancamento.id_meta !== null) {
+        return lancamento;
+    }
+
     await prisma.user.update({
         where: { id_user: id_user },
         data: {
