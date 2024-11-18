@@ -90,7 +90,7 @@ export default function Cadastro() {
                         value={formData.nome}
                         onChange={handleChange}
                         required
-                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="block w-full rounded-md bg-gray-700 text-slate-200 py-2 px-3 mt-2 focus:ring-indigo-500 focus:border-indigo-500 border-transparent"
                     />
                 </div>
 
@@ -102,7 +102,7 @@ export default function Cadastro() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="block w-full rounded-md bg-gray-700 text-slate-200 py-2 px-3 mt-2 focus:ring-indigo-500 focus:border-indigo-500 border-transparent"
                     />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
@@ -115,7 +115,7 @@ export default function Cadastro() {
                         value={formData.dataNascimento}
                         onChange={handleChange}
                         required
-                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="block w-full rounded-md bg-gray-700 text-slate-200 py-2 px-3 mt-2 focus:ring-indigo-500 focus:border-indigo-500 border-transparent"
                     />
                 </div>
 
@@ -127,7 +127,7 @@ export default function Cadastro() {
                         value={formData.telefone}
                         onChange={handleChange}
                         required
-                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="block w-full rounded-md bg-gray-700 text-slate-200 py-2 px-3 mt-2 focus:ring-indigo-500 focus:border-indigo-500 border-transparent"
                     />
                 </div>
 
@@ -139,7 +139,7 @@ export default function Cadastro() {
                         value={formData.senha}
                         onChange={handleChange}
                         required
-                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="block w-full rounded-md bg-gray-700 text-slate-200 py-2 px-3 mt-2 focus:ring-indigo-500 focus:border-indigo-500 border-transparent"
                     />
                 </div>
 
@@ -151,7 +151,7 @@ export default function Cadastro() {
                         value={formData.confirmarSenha}
                         onChange={handleChange}
                         required
-                        className="w-full px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="block w-full rounded-md bg-gray-700 text-slate-200 py-2 px-3 mt-2 focus:ring-indigo-500 focus:border-indigo-500 border-transparent"
                     />
                     {errors.confirmarSenha && <p className="text-red-500 text-sm mt-1">{errors.confirmarSenha}</p>}
                 </div>
